@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KRISHNA CSC CENTRE - Multi-WhatsApp Cash Payout</title>
+  <style>
+    :root {
+      --primary: #0f3460;
+      --accent: #25D366;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --border: #e2e8f0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding: 14px; }
+
+    .main-wrapper {
+      max-width: 1320px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 470px 1fr;
+      gap: 18px;
+    }
+
+    @media (max-width: 980px) {
+      .main-wrapper { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      padding: 18px;
+      border: 1px solid var(--border);
+    }
+
+    .shop-header {
+      background: linear-gradient(135deg, #0f3460, #1a1a2e);
+      color: white;
+      text-align: center;
+      padding: 16px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+    }
+    .shop-header h2 { font-size: 20px; font-weight: 800; }
+    .shop-header p { font-size: 13px; margin-top: 3px; opacity: 0.95; }
+    .badge {
+      display: inline-block;
+      background: #e0f2fe;
+      color: #0369a1;
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-top: 6px;
+      font-weight: 700;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .stat-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+    }
+    .stat-box span { font-size: 11px; color: #64748b; font-weight: 600; display: block; }
+    .stat-box strong { font-size: 15px; color: var(--primary); }
+
+    .form-group { margin-bottom: 11px; }
+    label { display: block; font-size: 12.5px; font-weight: 600; margin-bottom: 4px; color: #334155; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    input, select {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 13.5px;
+      outline: none;
+    }
+    input:focus, select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(15, 52, 96, 0.12);
+    }
+
+    .operator-select {
+      background: #eff6ff;
+      border: 1.5px solid #93c5fd;
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin-bottom: 11px;
+    }
+
+    .calc-toggle {
+      background: #f1f5f9;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 12px;
+      font-size: 12px;
+    }
+    .calc-toggle p { font-weight: 700; color: var(--primary); margin-bottom: 6px; }
+    .calc-toggle label { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; cursor: pointer; }
+    .calc-toggle label:last-child { margin-bottom: 0; }
+
+    .summary-box {
+      background: #f0fdf4;
+      border: 1.5px dashed #22c55e;
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin: 14px 0;
+      font-size: 13.5px;
+      line-height: 1.6;
+    }
+    .summary-row { display: flex; justify-content: space-between; }
+    .summary-row.total {
+      font-weight: 800;
+      font-size: 16px;
+      color: #15803d;
+      border-top: 1px solid #bbf7d0;
+      margin-top: 5px;
+      padding-top: 5px;
+    }
+
+    .wa-button-container {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 12px;
+    }
+    .wa-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #166534;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    button {
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-wa-all { background: #15803d; color: white; width: 100%; margin-bottom: 8px; padding: 12px; font-size: 14px; }
+    .btn-wa-cust { background: #25D366; color: white; }
+    .btn-wa-krishna { background: #0284c7; color: white; }
+    .btn-wa-deepak { background: #7c3aed; color: white; }
+    .btn-print { background: #334155; color: white; }
+    .btn-save { background: var(--primary); color: white; }
+    .btn-reset { background: #e2e8f0; color: #475569; grid-column: span 2; }
+
+    #popupNotice {
+      display: none;
+      background: #fef3c7;
+      border: 1px solid #fde68a;
+      color: #92400e;
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    #editBanner {
+      display: none;
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      color: #92400e;
+      padding: 8px 12px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      font-size: 12.5px;
+      font-weight: 600;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .table-container {
+      overflow-x: auto;
+      max-height: 520px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
+    th { background: #f8fafc; color: #475569; padding: 9px; border-bottom: 1px solid var(--border); position: sticky; top: 0; font-weight: 600; }
+    td { padding: 8px; border-bottom: 1px solid #f1f5f9; }
+    tr:hover { background: #f8fafc; }
+
+    .action-group { display: flex; gap: 4px; }
+    .btn-action { padding: 4px 6px; font-size: 11px; border-radius: 4px; border: none; cursor: pointer; }
+    .ba-edit { background: #fef3c7; color: #b45309; font-weight: bold; }
+    .ba-wa { background: #dcfce7; color: #166534; }
+    .ba-pr { background: #e0f2fe; color: #075985; }
+    .ba-del { background: #fee2e2; color: #991b1b; }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(2px);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+    .modal-content {
+      background: #ffffff;
+      border-radius: 12px;
+      max-width: 920px;
+      width: 100%;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .modal-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff1f2;
+      border-radius: 12px 12px 0 0;
+    }
+    .modal-body { padding: 14px; overflow-y: auto; flex: 1; }
+    .modal-footer {
+      padding: 12px 18px;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f8fafc;
+      border-radius: 0 0 12px 12px;
+    }
+
+    #printSection { display: none; }
+    @media print {
+      body * { visibility: hidden; }
+      #printSection, #printSection * { visibility: visible; }
+      #printSection {
+        display: block;
+        position: absolute;
+        left: 0; top: 0;
+        width: 78mm; padding: 4mm;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 11px; line-height: 1.35;
+      }
+      .t-center { text-align: center; }
+      .t-border { border-top: 1px dashed #000; margin: 5px 0; }
+      .t-row { display: flex; justify-content: space-between; margin-bottom: 3px; }
+      .t-sign { margin-top: 25px; display: flex; justify-content: space-between; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="main-wrapper">
+  <!-- Form Section -->
+  <div class="card">
+    <div class="shop-header">
+      <h2>KRISHNA CSC CENTRE</h2>
+      <p>पचरुखिया, कुशीनगर (उ.प्र.) | 8052898547 / 6307155516</p>
+      <div class="badge">नकद वितरण एवं Multi-WhatsApp पावती</div>
+    </div>
+
+    <div id="editBanner">
+      <span>✏️ आप रिकॉर्ड (<span id="editIdText"></span>) संपादित कर रहे हैं</span>
+      <span onclick="cancelEdit()" title="रद्द करें" style="cursor:pointer; color:#b45309;">✕ Cancel</span>
+    </div>
+
+    <form id="cashForm" onsubmit="event.preventDefault(); handleFormSubmit();">
+      <input type="hidden" id="editingRecordId" value="">
+
+      <!-- Operator Name -->
+      <div class="operator-select">
+        <label for="operatorName">दुकान पर पेमेंट किसने दिया (Operator / Handled By):</label>
+        <select id="operatorName" required onchange="autoFillRemark()">
+          <option value="Krishna Madheshiya">Krishna Madheshiya (8052898547)</option>
+          <option value="Deepak Madheshiya">Deepak Madheshiya (6307155516)</option>
+        </select>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label>पैसा भेजने वाला (कस्टमर) *</label>
+          <input type="text" id="senderName" placeholder="उदा. राहुल (सऊदी/मुंबई)" required>
+        </div>
+        <div class="form-group">
+          <label>कस्टमर WhatsApp No. *</label>
+          <input type="tel" id="senderPhone" placeholder="10 अंक" pattern="[0-9]{10}" maxlength="10" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>दुकान पर कैश लेने वाले का नाम *</label>
+        <input type="text" id="receiverName" placeholder="उदा. रामप्यारे (पिताजी)" required oninput="autoFillRemark()">
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label>संबंध (Relation)</label>
+          <input type="text" id="relation" placeholder="उदा. पिता / भाई / माताजी" oninput="autoFillRemark()">
+        </div>
+        <div class="form-group">
+          <label>कैश लेने वाले का मोबाइल</label>
+          <input type="tel" id="receiverPhone" placeholder="वैकल्पिक" maxlength="10">
+        </div>
+      </div>
+
+      <!-- Charge Calculation Modes -->
+      <div class="calc-toggle">
+        <p>सर्विस चार्ज का तरीका:</p>
+        <label>
+          <input type="radio" name="chargeMode" value="deduct" checked onchange="calcAmounts()">
+          <span><b>कटौती (Deduct):</b> इसी रकम में से चार्ज कटेगा (₹5000 पर ₹4950 कैश)</span>
+        </label>
+        <label>
+          <input type="radio" name="chargeMode" value="included_extra" onchange="calcAmounts()">
+          <span><b>चार्ज जोड़कर भेजा:</b> ₹5000 + ₹50 = ₹5050 आए, कैश ₹5000 मिलेगा</span>
+        </label>
+        <label>
+          <input type="radio" name="chargeMode" value="cash_extra" onchange="calcAmounts()">
+          <span><b>नकद चार्ज:</b> ₹5000 ऑनलाइन आए, चार्ज ग्राहक हाथ से देगा</span>
+        </label>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label>ऑनलाइन प्राप्त रकम (₹) *</label>
+          <input type="number" id="onlineAmount" placeholder="उदा. 5000" min="1" step="any" oninput="calcAmounts()" required>
+        </div>
+        <div class="form-group">
+          <label>सर्विस चार्ज (कमीशन ₹) *</label>
+          <input type="number" id="chargeAmount" placeholder="उदा. 50" min="0" step="any" oninput="calcAmounts()" value="50">
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label>पेमेंट माध्यम</label>
+          <select id="payMode">
+            <option value="PhonePe UPI">PhonePe UPI</option>
+            <option value="Google Pay">Google Pay</option>
+            <option value="Paytm UPI">Paytm UPI</option>
+            <option value="Bank IMPS">Bank IMPS</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>UPI UTR / Ref No.</label>
+          <input type="text" id="utrNo" placeholder="12 अंकों का UTR">
+        </div>
+      </div>
+
+      <!-- Auto Generated Remark Field -->
+      <div class="form-group">
+        <label>रिमार्क (ऑटोमैटिक जनरेटेड Remark)</label>
+        <input type="text" id="remarkNotes" readonly style="background:#f1f5f9; color:#0f3460; font-weight:600;">
+      </div>
+
+      <!-- Live Calculation Display -->
+      <div class="summary-box">
+        <div class="summary-row">
+          <span>ऑनलाइन प्राप्त कुल:</span>
+          <span>₹ <span id="dispOnline">0.00</span></span>
+        </div>
+        <div class="summary-row">
+          <span>दुकान सर्विस चार्ज:</span>
+          <span>₹ <span id="dispCharge">0.00</span></span>
+        </div>
+        <div class="summary-row total">
+          <span>हाथ में दिया गया शुद्ध नकद:</span>
+          <span>₹ <span id="dispCash">0.00</span></span>
+        </div>
+      </div>
+
+      <!-- WhatsApp Delivery Box -->
+      <div class="wa-button-container">
+        <div class="wa-title">📲 WHATSAPP शेयरिंग (तीनों नंबर विकल्प)</div>
+        <button type="button" class="btn-wa-all" onclick="sendToAllThree()">
+          🚀 तीनों नंबरों पर एक साथ भेजें (Customer + 2 Shop)
+        </button>
+        <div class="btn-grid">
+          <button type="button" class="btn-wa-cust" onclick="sendToSingle('customer')">
+            👤 कस्टमर WhatsApp
+          </button>
+          <button type="button" class="btn-wa-krishna" onclick="sendToSingle('8052898547')">
+            📱 Krishna (8052898547)
+          </button>
+          <button type="button" class="btn-wa-deepak" style="grid-column: span 2;" onclick="sendToSingle('6307155516')">
+            📱 Deepak (6307155516)
+          </button>
+        </div>
+        <div id="popupNotice">
+          ⚠️ अगर तीनों टैब एक साथ न खुलें तो ब्राउज़र में ऊपर <b>"Always allow pop-ups"</b> पर क्लिक करें।
+        </div>
+      </div>
+
+      <!-- Other Actions -->
+      <div class="btn-grid">
+        <button type="button" class="btn-print" onclick="printReceiptSlip()">🖨️ पर्ची प्रिंट करें</button>
+        <button type="submit" class="btn-save" id="btnSubmit">💾 सिर्फ सेव करें</button>
+        <button type="button" class="btn-reset" onclick="resetForm()">🔄 नया फॉर्म (Reset)</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Register & Stats -->
+  <div class="card">
+    <div class="stats-grid">
+      <div class="stat-box"><span>कुल ऑनलाइन आया</span><strong>₹ <span id="statOnline">0</span></strong></div>
+      <div class="stat-box"><span>कुल नकद बांटा</span><strong>₹ <span id="statCash">0</span></strong></div>
+      <div class="stat-box"><span>कुल कमीशन (कमाई)</span><strong style="color:#15803d;">₹ <span id="statCharge">0</span></strong></div>
+    </div>
+
+    <div class="history-header">
+      <h3 style="font-size:14px; font-weight:700;">📋 दैनिक रजिस्टर (<span id="totalRecords">0</span>)</h3>
+      <div style="display:flex; gap:5px; flex-wrap:wrap; align-items:center;">
+        <input type="text" id="searchBox" placeholder="खोजें..." oninput="renderTable()" style="padding:5px 8px; font-size:12px; width:130px;">
+        <button type="button" onclick="openTrashModal()" style="padding:5px 8px; font-size:11px; background:#e11d48; color:white; border-radius:4px; font-weight:bold;">
+          🗑️ रीसायकल बिन (<span id="trashCountBadge">0</span>)
+        </button>
+        <button type="button" onclick="exportJSON()" style="padding:5px 8px; font-size:11px; background:#475569; color:white; border-radius:4px;">JSON</button>
+        <button type="button" onclick="document.getElementById('jsonFileInput').click()" style="padding:5px 8px; font-size:11px; background:#2563eb; color:white; border-radius:4px;">रिकवरी</button>
+        <input type="file" id="jsonFileInput" accept=".json" style="display:none;" onchange="importJSON(event)">
+        <button type="button" onclick="exportToCSV()" style="padding:5px 8px; font-size:11px; background:#047857; color:white; border-radius:4px;">Excel</button>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>समय</th>
+            <th>ऑपरेटर</th>
+            <th>कस्टमर</th>
+            <th>रिसीवर</th>
+            <th>ऑनलाइन</th>
+            <th>चार्ज</th>
+            <th>कैश</th>
+            <th>रिमार्क</th>
+            <th>एक्शन</th>
+          </tr>
+        </thead>
+        <tbody id="recordsBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Recycle Bin -->
+<div class="modal-overlay" id="trashModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>🗑️ रीसायकल बिन (डिलीट किए गए रिकॉर्ड)</h3>
+      <button type="button" onclick="closeTrashModal()" style="background:none; border:none; font-size:18px; cursor:pointer; color:#9f1239;">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>डिलीट समय</th>
+              <th>ऑपरेटर</th>
+              <th>कस्टमर</th>
+              <th>रिसीवर</th>
+              <th>कैश दिया</th>
+              <th>रिमार्क</th>
+              <th>एक्शन</th>
+            </tr>
+          </thead>
+          <tbody id="trashTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <span style="font-size:12px; color:#64748b;">कुल रिकॉर्ड: <b id="modalTrashCount">0</b></span>
+      <button type="button" onclick="emptyTrashPermanently()" style="padding:7px 12px; font-size:12px; background:#991b1b; color:white; border-radius:4px;">
+        🔥 रीसायकल बिन हमेशा के लिए खाली करें
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Print Slip -->
+<div id="printSection">
+  <div class="t-center">
+    <strong style="font-size:13px;">KRISHNA CSC CENTRE</strong><br>
+    पचरुखिया, कुशीनगर (उ.प्र.)<br>
+    मो: 8052898547 / 6307155516<br>
+    ** नकद भुगतान पावती (CASH RECEIPT) **
+  </div>
+  <div class="t-border"></div>
+  <div class="t-row"><span>तारीख:</span><span id="prDate"></span></div>
+  <div class="t-row"><span>ऑपरेटर:</span><span id="prOperator" style="font-weight:bold;"></span></div>
+  <div class="t-row"><span>पैसा भेजा:</span><span id="prSender"></span></div>
+  <div class="t-row"><span>कैश प्राप्तकर्ता:</span><span id="prReceiver"></span></div>
+  <div class="t-row"><span>संबंध:</span><span id="prRelation"></span></div>
+  <div class="t-row"><span>माध्यम:</span><span id="prMode"></span></div>
+  <div class="t-row"><span>UTR / Ref No:</span><span id="prUTR"></span></div>
+  <div class="t-border"></div>
+  <div class="t-row"><span>ऑनलाइन प्राप्त रकम:</span><span>₹<span id="prOnline">0</span></span></div>
+  <div class="t-row"><span>सर्विस चार्ज:</span><span>₹<span id="prCharge">0</span></span></div>
+  <div class="t-border"></div>
+  <div class="t-row" style="font-weight:bold; font-size:12px;"><span>हाथ में दिया गया नकद:</span><span>₹<span id="prCash">0</span></span></div>
+  <div class="t-row"><span>रिमार्क:</span><span id="prRemark" style="font-weight:600;"></span></div>
+  <div class="t-border"></div>
+  <div style="font-size:10px; margin: 4px 0;">
+    प्रमाणित किया जाता है कि मुझे कृष्णा सीएससी केंद्र से ऊपर दर्शाई गई नकद राशि प्राप्त हो चुकी है।
+  </div>
+  <div class="t-sign">
+    <span>दुकानदार हस्ताक्षर</span>
+    <span>प्राप्तकर्ता के हस्ताक्षर</span>
+  </div>
+  <div class="t-border"></div>
+  <div class="t-center" style="font-size:9px;">धन्यवाद! KRISHNA CSC CENTRE</div>
+</div>
+
+<script>
+  const STORAGE_KEY = 'krishna_cash_payout_final_v7';
+  const TRASH_KEY = 'krishna_cash_payout_trash_v7';
+
+  function fetchStored() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch(e) { return []; }
+  }
+  function storeData(arr) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+  }
+
+  function fetchTrash() {
+    try { return JSON.parse(localStorage.getItem(TRASH_KEY)) || []; } catch(e) { return []; }
+  }
+  function storeTrash(arr) {
+    localStorage.setItem(TRASH_KEY, JSON.stringify(arr));
+  }
+
+  function autoFillRemark() {
+    const op = document.getElementById('operatorName').value;
+    const receiver = document.getElementById('receiverName').value.trim() || 'परिजन';
+    const rel = document.getElementById('relation').value.trim();
+    const relText = rel ? ` (${rel})` : '';
+    document.getElementById('remarkNotes').value = `सुरक्षित नकद भुगतान ${op} द्वारा ${receiver}${relText} को सुपुर्द किया गया।`;
+  }
+
+  function calcAmounts() {
+    const online = parseFloat(document.getElementById('onlineAmount').value) || 0;
+    const charge = parseFloat(document.getElementById('chargeAmount').value) || 0;
+    const mode = document.querySelector('input[name="chargeMode"]:checked').value;
+
+    let cash = 0;
+    if (mode === 'deduct') {
+      cash = online > charge ? (online - charge) : 0;
+    } else if (mode === 'included_extra') {
+      cash = online > charge ? (online - charge) : online;
+    } else if (mode === 'cash_extra') {
+      cash = online;
+    }
+
+    document.getElementById('dispOnline').innerText = online.toFixed(2);
+    document.getElementById('dispCharge').innerText = charge.toFixed(2);
+    document.getElementById('dispCash').innerText = cash.toFixed(2);
+
+    return { online, charge, cash, mode };
+  }
+
+  function getFormData() {
+    const calc = calcAmounts();
+    autoFillRemark();
+    return {
+      operatorName: document.getElementById('operatorName').value,
+      senderName: document.getElementById('senderName').value.trim(),
+      senderPhone: document.getElementById('senderPhone').value.trim(),
+      receiverName: document.getElementById('receiverName').value.trim(),
+      relation: document.getElementById('relation').value.trim() || 'परिजन',
+      receiverPhone: document.getElementById('receiverPhone').value.trim() || 'N/A',
+      onlineAmount: calc.online,
+      chargeAmount: calc.charge,
+      cashPaid: calc.cash,
+      chargeMode: calc.mode,
+      payMode: document.getElementById('payMode').value,
+      utrNo: document.getElementById('utrNo').value.trim() || 'N/A',
+      remarkNotes: document.getElementById('remarkNotes').value.trim()
+    };
+  }
+
+  function validate(d) {
+    if (!d.senderName) { alert("पैसा भेजने वाले का नाम लिखें!"); return false; }
+    if (!d.senderPhone || d.senderPhone.length !== 10) { alert("कस्टमर का सही 10 अंकों का WhatsApp नंबर लिखें!"); return false; }
+    if (!d.receiverName) { alert("कैश लेने वाले का नाम लिखें!"); return false; }
+    if (d.onlineAmount <= 0) { alert("ऑनलाइन प्राप्त रकम सही भरें!"); return false; }
+    return true;
+  }
+
+  function handleFormSubmit() {
+    const d = getFormData();
+    if (!validate(d)) return;
+
+    const editingId = document.getElementById('editingRecordId').value;
+    let list = fetchStored();
+
+    if (editingId) {
+      const index = list.findIndex(x => x.id === parseInt(editingId));
+      if (index !== -1) {
+        list[index] = { ...list[index], ...d };
+        storeData(list);
+        alert("रिकॉर्ड सफलतापूर्वक अपडेट कर दिया गया!");
+        cancelEdit();
+      }
+    } else {
+      const now = new Date();
+      const newRecord = {
+        id: Date.now(),
+        dateStr: now.toLocaleDateString('hi-IN') + ' ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        ...d
+      };
+      list.unshift(newRecord);
+      storeData(list);
+      alert("ट्रांजैक्शन रजिस्टर में सुरक्षित हो गया!");
+      resetForm();
+    }
+
+    renderTable();
+    updateStats();
+  }
+
+  function editRecord(id) {
+    const list = fetchStored();
+    const item = list.find(x => x.id === id);
+    if (!item) return;
+
+    document.getElementById('editingRecordId').value = item.id;
+    document.getElementById('operatorName').value = item.operatorName || 'Krishna Madheshiya';
+    document.getElementById('senderName').value = item.senderName;
+    document.getElementById('senderPhone').value = item.senderPhone;
+    document.getElementById('receiverName').value = item.receiverName;
+    document.getElementById('relation').value = item.relation || '';
+    document.getElementById('receiverPhone').value = (item.receiverPhone === 'N/A' ? '' : item.receiverPhone);
+    document.getElementById('onlineAmount').value = item.onlineAmount;
+    document.getElementById('chargeAmount').value = item.chargeAmount;
+    document.getElementById('payMode').value = item.payMode;
+    document.getElementById('utrNo').value = (item.utrNo === 'N/A' ? '' : item.utrNo);
+    document.getElementById('remarkNotes').value = item.remarkNotes || '';
+
+    const radios = document.getElementsByName('chargeMode');
+    for (let r of radios) { if (r.value === item.chargeMode) r.checked = true; }
+
+    document.getElementById('editIdText').innerText = item.senderName;
+    document.getElementById('editBanner').style.display = 'flex';
+    document.getElementById('btnSubmit').innerText = '💾 अपडेट करें (Update Record)';
+    document.getElementById('btnSubmit').style.backgroundColor = '#d97706';
+
+    calcAmounts();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function cancelEdit() {
+    document.getElementById('editingRecordId').value = '';
+    document.getElementById('editBanner').style.display = 'none';
+    document.getElementById('btnSubmit').innerText = '💾 सिर्फ सेव करें';
+    document.getElementById('btnSubmit').style.backgroundColor = 'var(--primary)';
+    resetForm();
+  }
+
+  function deleteRecord(id) {
+    if (!confirm("क्या आप इस रिकॉर्ड को हटाना चाहते हैं? यह 'रीसायकल बिन' में सुरक्षित रहेगा।")) return;
+
+    let list = fetchStored();
+    const itemToDelete = list.find(x => x.id === id);
+    if (!itemToDelete) return;
+
+    list = list.filter(x => x.id !== id);
+    storeData(list);
+
+    let trash = fetchTrash();
+    itemToDelete.deletedAt = new Date().toLocaleString('hi-IN');
+    trash.unshift(itemToDelete);
+    storeTrash(trash);
+
+    renderTable();
+    updateStats();
+    updateTrashBadge();
+  }
+
+  function openTrashModal() {
+    renderTrashTable();
+    document.getElementById('trashModal').style.display = 'flex';
+  }
+
+  function closeTrashModal() {
+    document.getElementById('trashModal').style.display = 'none';
+  }
+
+  function renderTrashTable() {
+    const trash = fetchTrash();
+    const tbody = document.getElementById('trashTableBody');
+    tbody.innerHTML = '';
+    document.getElementById('modalTrashCount').innerText = trash.length;
+
+    if (!trash.length) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:18px; color:#94a3b8;">रीसायकल बिन खाली है!</td></tr>';
+      return;
+    }
+
+    trash.forEach(r => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td style="font-size:11px; color:#991b1b;">${r.deletedAt || r.dateStr}</td>
+        <td><span style="background:#e2e8f0; padding:2px 5px; border-radius:3px; font-size:11px;">${r.operatorName || 'Krishna'}</span></td>
+        <td><strong>${r.senderName}</strong><br><small style="color:#64748b;">${r.senderPhone}</small></td>
+        <td>${r.receiverName}</td>
+        <td style="color:#0f766e; font-weight:700;">₹${r.cashPaid}</td>
+        <td style="font-size:11px; color:#64748b;">${r.remarkNotes}</td>
+        <td>
+          <div style="display:flex; gap:5px;">
+            <button onclick="restoreRecord(${r.id})" style="padding:4px 8px; font-size:11px; background:#16a34a; color:white; border:none; border-radius:4px; cursor:pointer;">
+              🔄 Restore
+            </button>
+            <button onclick="permanentDeleteRecord(${r.id})" style="padding:4px 8px; font-size:11px; background:#dc2626; color:white; border:none; border-radius:4px; cursor:pointer;">
+              ✕ हटाएं
+            </button>
+          </div>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function restoreRecord(id) {
+    let trash = fetchTrash();
+    const item = trash.find(x => x.id === id);
+    if (!item) return;
+
+    trash = trash.filter(x => x.id !== id);
+    delete item.deletedAt;
+    storeTrash(trash);
+
+    let list = fetchStored();
+    list.unshift(item);
+    storeData(list);
+
+    renderTrashTable();
+    renderTable();
+    updateStats();
+    updateTrashBadge();
+    alert("रिकॉर्ड मुख्य रजिस्टर में वापस आ गया!");
+  }
+
+  function permanentDeleteRecord(id) {
+    if (!confirm("⚠️ यह रिकॉर्ड हमेशा के लिए मिट जाएगा। क्या आप निश्चित हैं?")) return;
+    let trash = fetchTrash().filter(x => x.id !== id);
+    storeTrash(trash);
+    renderTrashTable();
+    updateTrashBadge();
+  }
+
+  function emptyTrashPermanently() {
+    const trash = fetchTrash();
+    if (!trash.length) return alert("रीसायकल बिन पहले से खाली है!");
+    if (!confirm("क्या आप रीसायकल बिन के सारे रिकॉर्ड हमेशा के लिए मिटाना चाहते हैं?")) return;
+    storeTrash([]);
+    renderTrashTable();
+    updateTrashBadge();
+    alert("रीसायकल बिन खाली कर दिया गया!");
+  }
+
+  function updateTrashBadge() {
+    document.getElementById('trashCountBadge').innerText = fetchTrash().length;
+  }
+
+  function buildMessage(d) {
+    return `*✦ KRISHNA CSC CENTRE ✦*
+📍 *पचरुखिया, कुशीनगर (उ.प्र.)*
+📞 *मो:* 8052898547 / 6307155516
+━━━━━━━━━━━━━━━━━━━━━━
+*✅ नकद भुगतान पावती (CASH HANDOVER PROOF)*
+━━━━━━━━━━━━━━━━━━━━━━
+नमस्ते *${d.senderName}* जी, 
+आपके द्वारा ऑनलाइन भेजा गया पैसा आपके परिजन को नकद सुपुर्द कर दिया गया है:
+
+👤 *कैश प्राप्तकर्ता:* ${d.receiverName} (${d.relation})
+📥 *आपसे प्राप्त ऑनलाइन:* ₹${Number(d.onlineAmount).toFixed(2)}
+🏷️ *सर्विस चार्ज:* ₹${Number(d.chargeAmount).toFixed(2)}
+💵 *हाथ में दिया गया शुद्ध नकद:* ₹${Number(d.cashPaid).toFixed(2)}
+💳 *माध्यम:* ${d.payMode}
+🔖 *UTR / Txn Ref:* ${d.utrNo}
+📅 *तारीख व समय:* ${d.dateStr}
+━━━━━━━━━━━━━━━━━━━━━━
+👨‍💼 *कैश किसने दिया (Operator):* ${d.operatorName}
+📝 *रिमार्क (Remark):* ${d.remarkNotes}
+🔒 *कन्फर्मेशन:* नकद राशि सफलता पूर्वक सौंप दी गई है।
+
+_कृष्णा सीएससी केंद्र पर भरोसा जताने के लिए धन्यवाद!_ 🙏`;
+  }
+
+  function getOrSaveCurrent() {
+    const cur = getFormData();
+    if (!validate(cur)) return null;
+    handleFormSubmit();
+    return fetchStored()[0];
+  }
+
+  function sendToSingle(target) {
+    let d = getOrSaveCurrent();
+    if (!d) return;
+
+    let phone = '';
+    if (target === 'customer') {
+      phone = d.senderPhone.replace(/[^0-9]/g, '');
+    } else {
+      phone = target;
+    }
+
+    if (phone.length === 10) phone = '91' + phone;
+    const msg = buildMessage(d);
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+  }
+
+  function sendToAllThree() {
+    let d = getOrSaveCurrent();
+    if (!d) return;
+
+    let custPhone = d.senderPhone.replace(/[^0-9]/g, '');
+    if (custPhone.length === 10) custPhone = '91' + custPhone;
+
+    const targets = [
+      { name: 'Customer', phone: custPhone },
+      { name: 'Krishna', phone: '918052898547' },
+      { name: 'Deepak', phone: '916307155516' }
+    ];
+
+    const msg = buildMessage(d);
+    const encoded = encodeURIComponent(msg);
+
+    window.open(`https://wa.me/${targets[0].phone}?text=${encoded}`, '_blank');
+
+    setTimeout(() => {
+      window.open(`https://wa.me/${targets[1].phone}?text=${encoded}`, '_blank');
+    }, 700);
+
+    setTimeout(() => {
+      window.open(`https://wa.me/${targets[2].phone}?text=${encoded}`, '_blank');
+    }, 1400);
+
+    document.getElementById('popupNotice').style.display = 'block';
+  }
+
+  function printReceiptSlip(item = null) {
+    let d = item;
+    if (!d) {
+      d = getOrSaveCurrent();
+      if (!d) return;
+    }
+
+    document.getElementById('prDate').innerText = d.dateStr;
+    document.getElementById('prOperator').innerText = d.operatorName;
+    document.getElementById('prSender').innerText = d.senderName + ' (' + d.senderPhone + ')';
+    document.getElementById('prReceiver').innerText = d.receiverName;
+    document.getElementById('prRelation').innerText = d.relation;
+    document.getElementById('prMode').innerText = d.payMode;
+    document.getElementById('prUTR').innerText = d.utrNo;
+    document.getElementById('prOnline').innerText = Number(d.onlineAmount).toFixed(2);
+    document.getElementById('prCharge').innerText = Number(d.chargeAmount).toFixed(2);
+    document.getElementById('prCash').innerText = Number(d.cashPaid).toFixed(2);
+    document.getElementById('prRemark').innerText = d.remarkNotes;
+
+    window.print();
+  }
+
+  function renderTable() {
+    const list = fetchStored();
+    const query = document.getElementById('searchBox').value.toLowerCase();
+    const tbody = document.getElementById('recordsBody');
+    tbody.innerHTML = '';
+
+    const filtered = list.filter(r => 
+      (r.operatorName && r.operatorName.toLowerCase().includes(query)) ||
+      r.senderName.toLowerCase().includes(query) ||
+      r.senderPhone.includes(query) ||
+      r.receiverName.toLowerCase().includes(query) ||
+      (r.utrNo && r.utrNo.toLowerCase().includes(query))
+    );
+
+    document.getElementById('totalRecords').innerText = filtered.length;
+
+    if (!filtered.length) {
+      tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:15px; color:#94a3b8;">कोई रिकॉर्ड उपलब्ध नहीं है।</td></tr>';
+      return;
+    }
+
+    filtered.forEach(r => {
+      const tr = document.createElement('tr');
+      const opBadgeColor = (r.operatorName === 'Deepak Madheshiya') ? '#f3e8ff' : '#e0f2fe';
+      const opTextColor = (r.operatorName === 'Deepak Madheshiya') ? '#6b21a8' : '#0369a1';
+
+      tr.innerHTML = `
+        <td style="font-size:11px;">${r.dateStr}</td>
+        <td><span style="background:${opBadgeColor}; color:${opTextColor}; padding:2px 6px; border-radius:4px; font-weight:700; font-size:11px;">${r.operatorName || 'Krishna'}</span></td>
+        <td><strong>${r.senderName}</strong><br><small style="color:#64748b;">${r.senderPhone}</small></td>
+        <td>${r.receiverName} <small>(${r.relation})</small></td>
+        <td style="font-weight:600;">₹${r.onlineAmount}</td>
+        <td style="color:#d97706;">₹${r.chargeAmount}</td>
+        <td style="color:#0f766e; font-weight:700;">₹${r.cashPaid}</td>
+        <td style="font-size:11px; max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${r.remarkNotes}">${r.remarkNotes}</td>
+        <td>
+          <div class="action-group">
+            <button class="btn-action ba-edit" onclick="editRecord(${r.id})" title="एडिट">✏️</button>
+            <button class="btn-action ba-wa" onclick="sendToAllThree()" title="तीनों नंबरों पर WhatsApp">WA All</button>
+            <button class="btn-action ba-pr" onclick="printReceiptSlip(fetchStored().find(x=>x.id===${r.id}))" title="प्रिंट">Print</button>
+            <button class="btn-action ba-del" onclick="deleteRecord(${r.id})" title="हटाएं">✕</button>
+          </div>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function exportJSON() {
+    const list = fetchStored();
+    if (!list.length) return alert("बैकअप के लिए कोई रिकॉर्ड नहीं है!");
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(list, null, 2));
+    const a = document.createElement('a');
+    a.href = dataStr;
+    a.download = `Krishna_CSC_Backup_${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+  }
+
+  function importJSON(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const imported = JSON.parse(e.target.result);
+        if (!Array.isArray(imported)) return alert("अमान्य JSON फ़ाइल!");
+
+        if (confirm(`फ़ाइल में ${imported.length} रिकॉर्ड मिले हैं। क्या इन्हें रिकवर करना चाहते हैं?`)) {
+          const current = fetchStored();
+          const existingIds = new Set(current.map(x => x.id));
+          const toAdd = imported.filter(x => !existingIds.has(x.id));
+          const combined = [...toAdd, ...current];
+          storeData(combined);
+          renderTable();
+          updateStats();
+          alert(`रिकवरी सफल! कुल ${combined.length} रिकॉर्ड लोड हो गए।`);
+        }
+      } catch (err) { alert("फ़ाइल पढ़ने में त्रुटि हुई!"); }
+      event.target.value = '';
+    };
+    reader.readAsText(file);
+  }
+
+  function updateStats() {
+    const list = fetchStored();
+    let totalOnline = 0, totalCash = 0, totalCharge = 0;
+    list.forEach(r => {
+      totalOnline += parseFloat(r.onlineAmount) || 0;
+      totalCash += parseFloat(r.cashPaid) || 0;
+      totalCharge += parseFloat(r.chargeAmount) || 0;
+    });
+    document.getElementById('statOnline').innerText = totalOnline.toLocaleString('en-IN');
+    document.getElementById('statCash').innerText = totalCash.toLocaleString('en-IN');
+    document.getElementById('statCharge').innerText = totalCharge.toLocaleString('en-IN');
+  }
+
+  function resetForm() {
+    document.getElementById('cashForm').reset();
+    document.getElementById('chargeAmount').value = '50';
+    document.getElementById('editingRecordId').value = '';
+    document.getElementById('editBanner').style.display = 'none';
+    document.getElementById('btnSubmit').innerText = '💾 सिर्फ सेव करें';
+    document.getElementById('btnSubmit').style.backgroundColor = 'var(--primary)';
+    document.getElementById('popupNotice').style.display = 'none';
+    calcAmounts();
+    autoFillRemark();
+  }
+
+  function exportToCSV() {
+    const list = fetchStored();
+    if (!list.length) return alert("कोई डेटा नहीं है!");
+    let csv = "ID,Date,Operator,Sender,Phone,Receiver,Relation,OnlineAmount,Charge,CashPaid,PayMode,UTR,Remark\n";
+    list.forEach(r => {
+      csv += `"${r.id}","${r.dateStr}","${r.operatorName || 'Krishna'}","${r.senderName}","${r.senderPhone}","${r.receiverName}","${r.relation}","${r.onlineAmount}","${r.chargeAmount}","${r.cashPaid}","${r.payMode}","${r.utrNo}","${r.remarkNotes || ''}"\n`;
+    });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `Krishna_CSC_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+  }
+
+  // Initial Run
+  calcAmounts();
+  autoFillRemark();
+  renderTable();
+  updateStats();
+  updateTrashBadge();
+</script>
+</body>
+</html>
