@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="hi" class="h-full bg-slate-900 text-slate-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canon G2012 / G3010 Print Station - CSC & Cyber Cafe</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <!-- QRCode.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <!-- PDF.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            canon: {
+              red: '#cc0000',
+              darkred: '#990000',
+              accent: '#e60000'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar { width: 7px; height: 7px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+    /* Print Formatting Engine for Canon G2012 / G3010 */
+    @media print {
+      body * {
+        visibility: hidden !important;
+      }
+      #printIsolationArea, #printIsolationArea * {
+        visibility: visible !important;
+      }
+      #printIsolationArea {
+        position: fixed !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: white !important;
+        z-index: 999999 !important;
+      }
+      .canon-print-page {
+        page-break-after: always !important;
+        page-break-inside: avoid !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        height: 100% !important;
+        box-sizing: border-box !important;
+      }
+      .canon-print-page img,
+      .canon-print-page canvas {
+        max-width: 100% !important;
+        max-height: 100% !important;
+        object-fit: contain !important;
+      }
+      .force-grayscale {
+        filter: grayscale(100%) contrast(110%) !important;
+      }
+      @page {
+        size: A4 portrait;
+        margin: 4mm; /* Optimal for Canon G-Series bottom feed roll */
+      }
+    }
+  </style>
+</head>
+<body class="h-full flex flex-col font-sans antialiased bg-slate-950 text-slate-100 select-none">
+
+  <!-- ================= TOP DESKTOP OPERATOR NAV ================= -->
+  <header class="bg-slate-900 border-b border-slate-800 px-4 lg:px-6 py-2.5 flex items-center justify-between shadow-lg sticky top-0 z-40">
+    <div class="flex items-center gap-3">
+      <!-- Canon Red Badge Logo -->
+      <div class="flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800">
+        <div class="w-7 h-7 bg-red-600 rounded-lg flex items-center justify-center font-black text-white text-xs tracking-tighter shadow-md shadow-red-600/30">
+          CANON
+        </div>
+        <div>
+          <span class="text-sm font-bold text-white tracking-wide font-mono flex items-center gap-1.5">
+            PIXMA G2012 / G3010
+            <span class="text-[10px] font-semibold bg-emerald-950 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-800">PC Station</span>
+          </span>
+          <p class="text-[10px] text-slate-400">Cyber Cafe & CSC Fast Print Operator Console</p>
+        </div>
+      </div>
+
+      <!-- Quick Status Indicators -->
+      <div class="hidden xl:flex items-center gap-2 border-l border-slate-800 pl-3 text-xs">
+        <div class="flex items-center gap-1.5 text-slate-300 bg-slate-800/60 px-2.5 py-1 rounded-lg">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>IndexedDB Engine: <b class="text-white">Active (50MB+ Safe)</b></span>
+        </div>
+        <div class="flex items-center gap-1.5 text-slate-300 bg-slate-800/60 px-2.5 py-1 rounded-lg">
+          <span>Target Paper: <b class="text-white">A4 (Canon GI-790 Ink)</b></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Controls & View Selector -->
+    <div class="flex items-center gap-2">
+      <!-- Direct Test Page Generator -->
+      <button onclick="printCanonTestPage()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 flex items-center gap-1.5 transition" title="Print Canon CMYK Nozzle Check Pattern">
+        <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+        <span>Nozzle Test Sheet</span>
+      </button>
+
+      <!-- Canon Troubleshooting Guide Modal Button -->
+      <button onclick="toggleCanonHelpModal()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 flex items-center gap-1.5 transition">
+        <svg class="w-3.5 h-3.5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span>Canon Errors</span>
+      </button>
+
+      <!-- Pricing & Settings Modal -->
+      <button onclick="toggleSettingsModal()" class="p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition" title="Rate & Shop Settings">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      </button>
+
+      <!-- View Switcher -->
+      <div class="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 ml-2">
+        <button id="viewBtnOperator" onclick="switchActiveView('operator')" class="px-3 py-1 rounded-lg text-xs font-semibold bg-red-600 text-white shadow transition">
+          🖥️ PC Operator Desk
+        </button>
+        <button id="viewBtnCustomer" onclick="switchActiveView('customer')" class="px-3 py-1 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition">
+          📱 Mobile Portal View
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Notification Banner -->
+  <div id="toastAlert" class="fixed top-16 right-6 z-50 transform translate-y-[-120%] opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-3 bg-red-600 text-white px-5 py-3 rounded-xl shadow-2xl border border-red-500 font-medium text-sm">
+    <span id="toastIcon">🖨️</span>
+    <span id="toastMessage">Order Received</span>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- MAIN WORKSPACE                                            -->
+  <!-- ========================================================= -->
+  <main class="flex-1 overflow-hidden p-3 lg:p-5 flex flex-col">
+
+    <!-- ========================================================= -->
+    <!-- VIEW A: DESKTOP OPERATOR DESK (PRIMARY PC VIEW)           -->
+    <!-- ========================================================= -->
+    <div id="operatorWorkspace" class="h-full flex flex-col gap-4">
+      
+      <!-- Top Metrics & Quick Drop Bar -->
+      <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-3">
+        <!-- Live Queue Counter -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 flex items-center justify-between">
+          <div>
+            <p class="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Queue (कतार में)</p>
+            <h3 id="statQueue" class="text-2xl font-bold font-mono text-white mt-0.5">0</h3>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-red-950/70 border border-red-800/60 text-red-400 flex items-center justify-center font-bold">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+          </div>
+        </div>
+
+        <!-- Today's Prints -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 flex items-center justify-between">
+          <div>
+            <p class="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Pages Printed</p>
+            <h3 id="statPages" class="text-2xl font-bold font-mono text-white mt-0.5">0</h3>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-blue-950/70 border border-blue-800/60 text-blue-400 flex items-center justify-center font-bold">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          </div>
+        </div>
+
+        <!-- Revenue -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 flex items-center justify-between">
+          <div>
+            <p class="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Today Earnings</p>
+            <h3 id="statEarnings" class="text-2xl font-bold font-mono text-emerald-400 mt-0.5">₹0</h3>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-emerald-950/70 border border-emerald-800/60 text-emerald-400 flex items-center justify-center font-bold">
+            ₹
+          </div>
+        </div>
+
+        <!-- Fast Operator Manual Upload (WhatsApp / Pendrive / Direct File) -->
+        <div class="md:col-span-1 lg:col-span-3 bg-slate-900 border border-dashed border-slate-700 hover:border-red-500 rounded-2xl p-2.5 flex items-center justify-between transition cursor-pointer relative group" id="operatorQuickDrop">
+          <input type="file" id="operatorFileInput" accept="application/pdf,image/*" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="handleOperatorDirectUpload(event)">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-slate-800 group-hover:bg-red-950 text-red-500 flex items-center justify-center transition">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+            </div>
+            <div>
+              <p class="text-xs font-bold text-white group-hover:text-red-400 transition">PC Direct File Drop (WhatsApp / USB / Folder)</p>
+              <p class="text-[11px] text-slate-400">Drag PDF/Images or click to add directly to Queue</p>
+            </div>
+          </div>
+          <span class="text-[11px] bg-slate-800 text-slate-300 px-2.5 py-1 rounded-lg border border-slate-700 font-medium">
+            Browse File
+          </span>
+        </div>
+      </div>
+
+      <!-- Main Columns: Left (Print Queue & Actions) - Right (Standee QR & Fast Canon Presets) -->
+      <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 overflow-hidden">
+        
+        <!-- ================= PRINT QUEUE LIST (8 Cols) ================= -->
+        <div class="lg:col-span-8 flex flex-col bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-sm">
+          <!-- Queue Header -->
+          <div class="px-4 py-3 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between flex-wrap gap-2">
+            <div class="flex items-center gap-2.5">
+              <span class="w-3 h-3 rounded-full bg-emerald-500 animate-ping"></span>
+              <h2 class="text-sm font-bold text-white uppercase tracking-wider font-mono">Live Print Queue (कंप्यूटर प्रिंट कतार)</h2>
+              <span id="queueBadgeCount" class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 font-mono">0 jobs</span>
+            </div>
+
+            <!-- Queue Search & Filter -->
+            <div class="flex items-center gap-2">
+              <input type="text" id="tokenSearchInput" onkeyup="filterQueueList()" placeholder="Search Token #..." class="bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-red-500 font-mono w-28">
+              <button onclick="clearCompletedJobs()" class="text-xs text-slate-400 hover:text-red-400 px-2.5 py-1 rounded bg-slate-800 border border-slate-700 transition">
+                Clear Done
+              </button>
+            </div>
+          </div>
+
+          <!-- Queue Container -->
+          <div id="queueCardContainer" class="flex-1 overflow-y-auto p-4 space-y-3">
+            <!-- Will be populated dynamically -->
+          </div>
+        </div>
+
+        <!-- ================= SIDEBAR: CANON CONTROLS & QR STANDEE (4 Cols) ================= -->
+        <div class="lg:col-span-4 flex flex-col gap-4 overflow-y-auto">
+          
+          <!-- Canon G2012/G3010 Hardware Print Presets -->
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-sm">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center justify-between border-b border-slate-800 pb-2">
+              <span>Canon PIXMA G-Series Presets</span>
+              <span class="text-[10px] text-red-400 font-mono">GI-790 Ready</span>
+            </h3>
+
+            <div class="grid grid-cols-2 gap-2 mt-3 text-xs">
+              <button onclick="applyPreset('plain_bw')" class="p-2.5 bg-slate-950 hover:bg-slate-800 rounded-xl border border-slate-800 text-left transition flex flex-col justify-between">
+                <span class="font-bold text-white">Plain A4 (B&W)</span>
+                <span class="text-[10px] text-emerald-400 mt-1">Saves GI-790 Color</span>
+              </button>
+              <button onclick="applyPreset('plain_color')" class="p-2.5 bg-slate-950 hover:bg-slate-800 rounded-xl border border-slate-800 text-left transition flex flex-col justify-between">
+                <span class="font-bold text-white">Plain A4 (Color)</span>
+                <span class="text-[10px] text-blue-400 mt-1">Vibrant Document</span>
+              </button>
+              <button onclick="applyPreset('id_card')" class="p-2.5 bg-slate-950 hover:bg-slate-800 rounded-xl border border-slate-800 text-left transition flex flex-col justify-between">
+                <span class="font-bold text-white">Aadhaar / ID Card</span>
+                <span class="text-[10px] text-amber-400 mt-1">2-in-1 Fit Center</span>
+              </button>
+              <button onclick="applyPreset('photo_glossy')" class="p-2.5 bg-slate-950 hover:bg-slate-800 rounded-xl border border-slate-800 text-left transition flex flex-col justify-between">
+                <span class="font-bold text-white">Glossy Photo Paper</span>
+                <span class="text-[10px] text-purple-400 mt-1">High Quality DPI</span>
+              </button>
+            </div>
+
+            <!-- Canon Duplex Manual Guide -->
+            <div class="mt-3 p-2 bg-slate-950/80 rounded-xl border border-slate-800 text-[11px] text-slate-300 space-y-1">
+              <p class="font-semibold text-slate-200">💡 G2012/G3010 Manual Duplex (दोनों तरफ):</p>
+              <p class="text-slate-400">1. पहले 'Print Odd Pages' चुनें। 2. पेपर को उल्टा करके ट्रे में लगाएं। 3. फिर 'Print Even Pages' चुनें।</p>
+            </div>
+          </div>
+
+          <!-- Counter QR Standee Widget -->
+          <div class="bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800 rounded-2xl p-4 text-center shadow-lg flex flex-col items-center">
+            <span class="text-[11px] font-bold text-red-400 uppercase tracking-widest bg-red-950/60 px-2.5 py-0.5 rounded-full border border-red-900 mb-2">
+              Counter QR Standee
+            </span>
+            <h3 id="standeeShopTitle" class="text-base font-bold text-white font-mono">KRISHNA CSC CENTRE</h3>
+            <p class="text-xs text-slate-400 mt-0.5">Customer Scan Point (मोबाइल से स्कैन करें)</p>
+
+            <!-- Real QR Container -->
+            <div class="bg-white p-3 rounded-2xl shadow-xl mt-3 border-4 border-slate-200">
+              <div id="standeeQrBox"></div>
+            </div>
+
+            <!-- Target URL -->
+            <p id="kioskUrlDisplay" class="text-[10px] font-mono text-slate-400 mt-2 break-all max-w-[240px]">Generating...</p>
+
+            <div class="flex gap-2 mt-3 w-full">
+              <button onclick="copyKioskUrlToClipboard()" class="flex-1 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold border border-slate-700 transition">
+                📋 Copy Link
+              </button>
+              <button onclick="printCustomerStandeeSheet()" class="flex-1 py-1.5 bg-red-600 hover:bg-red-500 text-white rounded-lg text-xs font-semibold shadow transition">
+                🖨️ Print Standee
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- VIEW B: CUSTOMER MOBILE SCAN & UPLOAD PORTAL              -->
+    <!-- ========================================================= -->
+    <div id="customerWorkspace" class="hidden flex-1 overflow-y-auto max-w-xl w-full mx-auto p-2 sm:p-4 space-y-4">
+      
+      <!-- Customer Header -->
+      <div class="bg-gradient-to-r from-red-600 to-slate-900 rounded-2xl p-4 text-white shadow-lg relative overflow-hidden">
+        <div class="relative z-10">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] bg-white/20 backdrop-blur-sm px-2.5 py-0.5 rounded-full font-mono font-bold uppercase">
+              Canon Instant Print Kiosk
+            </span>
+            <span class="text-xs text-emerald-300 flex items-center gap-1 font-semibold">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> G2012 / G3010 Online
+            </span>
+          </div>
+          <h2 id="custShopNameLbl" class="text-xl font-bold font-mono mt-2">KRISHNA CSC CENTRE</h2>
+          <p class="text-xs text-slate-200 mt-0.5">अपनी PDF या इमेज चुनें और प्रिंट टोकन प्राप्त करें</p>
+        </div>
+      </div>
+
+      <!-- File Picker & Drop Zone -->
+      <div class="bg-slate-900 border-2 border-dashed border-slate-700 hover:border-red-500 rounded-2xl p-6 text-center cursor-pointer relative transition" id="custDropBox">
+        <input type="file" id="custFileInput" accept="application/pdf,image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="handleCustomerFileSelect(event)">
+        
+        <div id="custUploadPrompt" class="space-y-2">
+          <div class="w-14 h-14 mx-auto rounded-2xl bg-red-950/60 border border-red-800 text-red-500 flex items-center justify-center text-2xl shadow-inner">
+            📄
+          </div>
+          <h4 class="text-sm font-bold text-white">प्रिंट हेतु PDF या फ़ोटो चुनें</h4>
+          <p class="text-xs text-slate-400">PDF, JPG, PNG (Supports up to 50MB)</p>
+          <span class="inline-block mt-2 px-4 py-2 bg-red-600 hover:bg-red-500 text-white font-bold text-xs rounded-xl shadow-md transition">
+            फ़ाइल अपलोड करें (Choose File)
+          </span>
+        </div>
+
+        <!-- Selected State -->
+        <div id="custSelectedBox" class="hidden text-left bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex items-center justify-between">
+          <div class="flex items-center gap-3 overflow-hidden">
+            <div class="w-10 h-10 rounded-lg bg-red-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">
+              PDF
+            </div>
+            <div class="truncate">
+              <p id="custFileName" class="text-xs font-bold text-white truncate">document.pdf</p>
+              <p id="custFileMeta" class="text-[11px] text-slate-400">0.0 MB • <span id="custPageNumSpan" class="text-red-400 font-bold">1 Page</span></p>
+            </div>
+          </div>
+          <button onclick="resetCustomerFile(event)" class="z-20 p-2 text-slate-400 hover:text-red-400">✕</button>
+        </div>
+      </div>
+
+      <!-- Print Config Options -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-4">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300 border-b border-slate-800 pb-2">
+          प्रिंट सेटिंग्स (Print Settings)
+        </h4>
+
+        <!-- Color Mode -->
+        <div class="grid grid-cols-2 gap-3">
+          <label id="custOptBw" class="p-3 rounded-xl border-2 border-red-600 bg-red-950/30 cursor-pointer flex items-center gap-2.5 transition">
+            <input type="radio" name="custColorChoice" value="bw" checked onchange="calcCustomerBill()" class="sr-only">
+            <div class="w-6 h-6 rounded bg-slate-800 text-white flex items-center justify-center text-xs font-bold">B&W</div>
+            <div>
+              <p class="text-xs font-bold text-white">Black & White</p>
+              <p class="text-[10px] text-slate-400">₹<span id="custRateBwLbl">2</span> / पेज</p>
+            </div>
+          </label>
+
+          <label id="custOptColor" class="p-3 rounded-xl border-2 border-slate-800 bg-slate-950 cursor-pointer flex items-center gap-2.5 transition">
+            <input type="radio" name="custColorChoice" value="color" onchange="calcCustomerBill()" class="sr-only">
+            <div class="w-6 h-6 rounded bg-gradient-to-tr from-pink-500 to-amber-400 text-white flex items-center justify-center text-xs font-bold">RGB</div>
+            <div>
+              <p class="text-xs font-bold text-white">Full Color</p>
+              <p class="text-[10px] text-slate-400">₹<span id="custRateColorLbl">10</span> / पेज</p>
+            </div>
+          </label>
+        </div>
+
+        <!-- Copies & Sidedness -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-400 mb-1">प्रतियां (Copies)</label>
+            <div class="flex items-center bg-slate-950 border border-slate-800 rounded-xl overflow-hidden p-1">
+              <button onclick="adjustCustomerCopies(-1)" class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold hover:bg-slate-700">-</button>
+              <input type="number" id="custCopies" value="1" min="1" max="100" onchange="calcCustomerBill()" class="w-full text-center bg-transparent text-sm font-bold text-white focus:outline-none">
+              <button onclick="adjustCustomerCopies(1)" class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold hover:bg-slate-700">+</button>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-400 mb-1">प्रिंट साइड (Sides)</label>
+            <select id="custSides" onchange="calcCustomerBill()" class="w-full h-10 bg-slate-950 border border-slate-800 rounded-xl px-2 text-xs font-semibold text-white focus:outline-none focus:border-red-500">
+              <option value="single">एक तरफ (Single Sided)</option>
+              <option value="duplex">दोनों तरफ (2-Sided Duplex)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Customer Identity -->
+        <div class="grid grid-cols-2 gap-3 pt-2 border-t border-slate-800">
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-400 mb-1">आपका नाम (Customer Name)</label>
+            <input type="text" id="custInputName" placeholder="e.g. Ramesh" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-red-500">
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-400 mb-1">मोबाइल नंबर (Mobile)</label>
+            <input type="tel" id="custInputPhone" placeholder="e.g. 98XXXXXXXX" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-red-500">
+          </div>
+        </div>
+
+        <!-- Estimated Bill Bar -->
+        <div class="bg-red-950/40 border border-red-900/60 p-3.5 rounded-xl flex items-center justify-between">
+          <div>
+            <span class="text-[11px] text-red-300 block font-medium">कुल अनुमानित शुल्क (Total Bill)</span>
+            <span id="custCalcFormula" class="text-[10px] text-slate-400">1 Page × 1 Copy</span>
+          </div>
+          <div class="text-right">
+            <span id="custCalcTotal" class="text-2xl font-bold font-mono text-red-400">₹2.00</span>
+          </div>
+        </div>
+
+        <!-- Send Button -->
+        <button onclick="submitCustomerJobToKiosk()" class="w-full py-3.5 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold text-sm rounded-xl shadow-lg shadow-red-600/30 transition flex items-center justify-center gap-2 active:scale-[0.99]">
+          <span>🖨️ प्रिंटर कतार में भेजें (Send to Print Queue)</span>
+        </button>
+      </div>
+
+      <!-- Generated Token Success Box (Hidden initially) -->
+      <div id="custTokenModal" class="hidden bg-slate-900 border border-emerald-600 p-5 rounded-2xl text-center space-y-3 shadow-2xl">
+        <div class="w-12 h-12 bg-emerald-950 border border-emerald-800 rounded-full flex items-center justify-center text-emerald-400 mx-auto text-xl">
+          ✓
+        </div>
+        <h3 class="text-base font-bold text-white">प्रिंट सफलतापूर्वक भेजा गया!</h3>
+        <p class="text-xs text-slate-400">काउंटर पर ऑपरेटर को यह टोकन नंबर बताएं:</p>
+        <div class="bg-slate-950 py-3 px-6 rounded-xl border border-slate-800 inline-block font-mono text-3xl font-extrabold text-emerald-400 tracking-wider" id="generatedTokenDisplay">
+          #0000
+        </div>
+        <p class="text-[11px] text-slate-400">आपकी फाइल Canon PIXMA G2012 / G3010 प्रिंटर के लिए तैयार है।</p>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ========================================================= -->
+  <!-- MODALS & PREVIEWS                                         -->
+  <!-- ========================================================= -->
+
+  <!-- Full Job Inspector & Page Preview Modal -->
+  <div id="inspectorModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex flex-col p-3 lg:p-6">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl flex-1 flex flex-col overflow-hidden max-w-5xl w-full mx-auto shadow-2xl">
+      <!-- Modal Header -->
+      <div class="px-5 py-3.5 border-b border-slate-800 flex items-center justify-between bg-slate-900/90">
+        <div class="flex items-center gap-3">
+          <span id="inspectTokenBadge" class="px-2.5 py-1 rounded bg-red-600 text-white font-mono text-xs font-bold">#0000</span>
+          <div>
+            <h3 id="inspectFileName" class="text-sm font-bold text-white">document.pdf</h3>
+            <p id="inspectDetails" class="text-xs text-slate-400">1 Page • B&W • 1 Copy</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <!-- Page Range Selector for Manual Duplex or Custom Pages -->
+          <div class="flex items-center gap-1 bg-slate-950 px-2 py-1 rounded-lg border border-slate-800 text-xs">
+            <span class="text-slate-400">Pages:</span>
+            <select id="inspectPageFilter" onchange="applyPageFilterToPreview()" class="bg-transparent text-white font-semibold focus:outline-none">
+              <option value="all">All Pages (सभी पेज)</option>
+              <option value="odd">Odd Pages Only (विषम 1,3,5)</option>
+              <option value="even">Even Pages Only (सम 2,4,6)</option>
+            </select>
+          </div>
+          <!-- Grayscale Toggle -->
+          <button id="grayscaleToggleBtn" onclick="toggleInspectorGrayscale()" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-800 text-slate-300 border border-slate-700 transition">
+            Grayscale: OFF
+          </button>
+          <button onclick="closeInspectorModal()" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center font-bold">✕</button>
+        </div>
+      </div>
+
+      <!-- Preview Canvas Area -->
+      <div id="inspectorCanvasArea" class="flex-1 bg-slate-950 overflow-y-auto p-4 flex flex-col items-center gap-4">
+        <!-- Rendered Pages go here -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-5 py-3.5 border-t border-slate-800 bg-slate-900/90 flex items-center justify-between">
+        <div class="text-xs text-slate-400 font-mono">
+          Ready for Canon PIXMA G2012 / G3010 (Standard 4mm bottom-feed border)
+        </div>
+        <div class="flex items-center gap-3">
+          <button onclick="closeInspectorModal()" class="px-4 py-2 text-xs font-medium text-slate-400 hover:text-white">Close</button>
+          <button id="inspectPrintBtn" onclick="executeInspectorDirectPrint()" class="px-5 py-2 bg-red-600 hover:bg-red-500 text-white font-bold text-xs rounded-xl shadow-lg flex items-center gap-1.5 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+            Direct Print to Canon G-Series
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Canon G2012 / G3010 Diagnostics & Error Lookup Modal -->
+  <div id="canonHelpModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-5 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 rounded-full bg-red-600"></span>
+          <h3 class="text-sm font-bold text-white font-mono uppercase">Canon G2012 / G3010 Diagnostic Guide</h3>
+        </div>
+        <button onclick="toggleCanonHelpModal()" class="text-slate-400 hover:text-white">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs text-slate-300 max-h-[60vh] overflow-y-auto pr-1">
+        <div class="p-3 bg-slate-950 rounded-xl border border-slate-800">
+          <span class="font-bold text-amber-400 block font-mono">Error 5B00 / P07 (Waste Ink Absorber Full)</span>
+          <p class="text-slate-400 mt-1">कारण: वेस्ट इंक पैड भर गया है। समाधान: प्रिंटर को सर्विस मोड (Power + Stop 5 बार दबाकर) में डालें और Canon Service Tool V3400/V4905 से रीसेट करें।</p>
+        </div>
+        <div class="p-3 bg-slate-950 rounded-xl border border-slate-800">
+          <span class="font-bold text-blue-400 block font-mono">Ink Blank / White Lines (नोज़ल में हवा या इंक न आना)</span>
+          <p class="text-slate-400 mt-1">समाधान: कंप्यूटर में Control Panel > Devices & Printers > Canon G2012/G3010 Properties > Maintenance में जाकर <b>Deep Cleaning</b> या <b>Ink Flush</b> चलाएं।</p>
+        </div>
+        <div class="p-3 bg-slate-950 rounded-xl border border-slate-800">
+          <span class="font-bold text-emerald-400 block font-mono">Canon G3010 Wi-Fi Connect (Direct Print)</span>
+          <p class="text-slate-400 mt-1">G3010 के Wi-Fi बटन को दबाएं जब तक नेटवर्क लाइट न चमके। कंप्यूटर या मोबाइल से "Canon_ij_setup" Wi-Fi कनेक्ट करके बिना रूटर सीधा प्रिंट दे सकते हैं।</p>
+        </div>
+        <div class="p-3 bg-slate-950 rounded-xl border border-slate-800">
+          <span class="font-bold text-purple-400 block font-mono">Paper Jam / Error 1000 (कागज फंसना)</span>
+          <p class="text-slate-400 mt-1">रियर ट्रे (Back Tray) से धीरे-धीरे दोनों हाथों से सीधा कागज निकालें। स्टॉप बटन दबाएं।</p>
+        </div>
+      </div>
+
+      <div class="pt-2 border-t border-slate-800 flex justify-end">
+        <button onclick="toggleCanonHelpModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-semibold">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-sm font-bold text-white font-mono">दुकान व रेट सेटिंग्स (Pricing & Shop)</h3>
+        <button onclick="toggleSettingsModal()" class="text-slate-400 hover:text-white">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-400 font-semibold mb-1">Shop / CSC Centre Name</label>
+          <input type="text" id="settingShopName" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-red-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 font-semibold mb-1">B&W Rate (₹ per page)</label>
+            <input type="number" id="settingRateBw" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-red-500">
+          </div>
+          <div>
+            <label class="block text-slate-400 font-semibold mb-1">Color Rate (₹ per page)</label>
+            <input type="number" id="settingRateColor" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-red-500">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 font-semibold mb-1">Custom Wi-Fi / Local PC IP Address</label>
+          <input type="text" id="settingLocalIp" placeholder="e.g. 192.168.1.5 or your domain" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-red-500">
+          <p class="text-[10px] text-slate-500 mt-1">If your shop has Wi-Fi, put your PC IP here so customer phones load the upload page directly.</p>
+        </div>
+      </div>
+
+      <div class="pt-2 border-t border-slate-800 flex justify-end gap-2">
+        <button onclick="toggleSettingsModal()" class="px-4 py-2 text-slate-400 hover:text-white text-xs">Cancel</button>
+        <button onclick="saveAppSettings()" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-xl text-xs font-bold shadow">Save Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden Isolation Container for Browser Direct Printing -->
+  <div id="printIsolationArea" class="hidden"></div>
+  <iframe id="silentPrintIframe" class="hidden" style="position: absolute; width:0; height:0; border:0;"></iframe>
+
+  <!-- ========================================================= -->
+  <!-- JAVASCRIPT SYSTEM ENGINE                                  -->
+  <!-- ========================================================= -->
+  <script>
+    // System Constants
+    const DB_NAME = 'CanonPrintStationDB_v2';
+    const DB_STORE = 'print_jobs';
+    const SETTINGS_KEY = 'canon_station_settings_v2';
+    const SYNC_CHANNEL = 'canon_station_sync_channel';
+
+    let dbInstance = null;
+    let syncBroadcast = null;
+
+    // App State
+    let appConfig = {
+      shopName: 'KRISHNA CSC CENTRE',
+      rateBw: 2,
+      rateColor: 10,
+      localIp: '',
+      printedPagesToday: 0,
+      revenueToday: 0
+    };
+
+    let activeJobs = [];
+    let currentInspectingJob = null;
+    let inspectorGrayscaleActive = false;
+    let renderedInspectorPages = [];
+
+    // Temporary Customer File Selection State
+    let customerSelectedBlob = {
+      file: null,
+      name: '',
+      sizeText: '',
+      pages: 1,
+      base64Data: null
+    };
+
+    // -------------------------------------------------------------
+    // 1. INDEXED-DB PERSISTENCE (Handles 50MB+ PDFs without quota errors)
+    // -------------------------------------------------------------
+    function initIndexedDB() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, 2);
+        request.onupgradeneeded = function(e) {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(DB_STORE)) {
+            db.createObjectStore(DB_STORE, { keyPath: 'id' });
+          }
+        };
+        request.onsuccess = function(e) {
+          dbInstance = e.target.result;
+          resolve(dbInstance);
+        };
+        request.onerror = function(err) {
+          console.error('IndexedDB Error:', err);
+          reject(err);
+        };
+      });
+    }
+
+    function saveJobToDB(job) {
+      if (!dbInstance) return;
+      const tx = dbInstance.transaction(DB_STORE, 'readwrite');
+      tx.objectStore(DB_STORE).put(job);
+    }
+
+    function removeJobFromDB(jobId) {
+      if (!dbInstance) return;
+      const tx = dbInstance.transaction(DB_STORE, 'readwrite');
+      tx.objectStore(DB_STORE).delete(jobId);
+    }
+
+    function loadAllJobsFromDB() {
+      return new Promise((resolve) => {
+        if (!dbInstance) return resolve([]);
+        const tx = dbInstance.transaction(DB_STORE, 'readonly');
+        const store = tx.objectStore(DB_STORE);
+        const req = store.getAll();
+        req.onsuccess = () => resolve(req.result || []);
+        req.onerror = () => resolve([]);
+      });
+    }
+
+    // -------------------------------------------------------------
+    // 2. INITIALIZATION ON WINDOW LOAD
+    // -------------------------------------------------------------
+    window.onload = async function() {
+      // PDF.js worker setup
+      if (window.pdfjsLib) {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      }
+
+      // Load Settings
+      loadSettings();
+
+      // Open IndexedDB
+      await initIndexedDB();
+      activeJobs = await loadAllJobsFromDB();
+
+      // Initialize Cross-Tab Sync via BroadcastChannel
+      try {
+        syncBroadcast = new BroadcastChannel(SYNC_CHANNEL);
+        syncBroadcast.onmessage = function(ev) {
+          if (ev.data && ev.data.type === 'NEW_PRINT_JOB') {
+            const incomingJob = ev.data.job;
+            // Prevent duplicate
+            if (!activeJobs.some(j => j.id === incomingJob.id)) {
+              activeJobs.unshift(incomingJob);
+              saveJobToDB(incomingJob);
+              playBeepSound();
+              showToast(`New Print Token #${incomingJob.token} Received!`);
+              renderQueueUI();
+            }
+          }
+        };
+      } catch (err) {
+        console.warn('BroadcastChannel not supported', err);
+      }
+
+      // Check if URL has ?mode=customer
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('mode') === 'customer') {
+        switchActiveView('customer');
+      } else {
+        switchActiveView('operator');
+      }
+
+      // Build Standee QR Code
+      buildStandeeQRCode();
+      renderQueueUI();
+      updateMetricCounters();
+    };
+
+    // -------------------------------------------------------------
+    // 3. SETTINGS & STANDEE QR CODE GENERATION
+    // -------------------------------------------------------------
+    function loadSettings() {
+      const stored = localStorage.getItem(SETTINGS_KEY);
+      if (stored) {
+        try {
+          appConfig = { ...appConfig, ...JSON.parse(stored) };
+        } catch (e) {
+          console.error(e);
+        }
+      }
+      applySettingsToUI();
+    }
+
+    function applySettingsToUI() {
+      document.getElementById('standeeShopTitle').textContent = appConfig.shopName;
+      document.getElementById('custShopNameLbl').textContent = appConfig.shopName;
+      document.getElementById('custRateBwLbl').textContent = appConfig.rateBw;
+      document.getElementById('custRateColorLbl').textContent = appConfig.rateColor;
+      document.getElementById('settingShopName').value = appConfig.shopName;
+      document.getElementById('settingRateBw').value = appConfig.rateBw;
+      document.getElementById('settingRateColor').value = appConfig.rateColor;
+      document.getElementById('settingLocalIp').value = appConfig.localIp || '';
+    }
+
+    function saveAppSettings() {
+      appConfig.shopName = document.getElementById('settingShopName').value.trim() || 'KRISHNA CSC CENTRE';
+      appConfig.rateBw = parseFloat(document.getElementById('settingRateBw').value) || 2;
+      appConfig.rateColor = parseFloat(document.getElementById('settingRateColor').value) || 10;
+      appConfig.localIp = document.getElementById('settingLocalIp').value.trim();
+
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(appConfig));
+      applySettingsToUI();
+      buildStandeeQRCode();
+      toggleSettingsModal();
+      showToast('Settings saved successfully!');
+    }
+
+    function toggleSettingsModal() {
+      const m = document.getElementById('settingsModal');
+      m.classList.toggle('hidden');
+    }
+
+    function toggleCanonHelpModal() {
+      const m = document.getElementById('canonHelpModal');
+      m.classList.toggle('hidden');
+    }
+
+    function buildStandeeQRCode() {
+      const qrBox = document.getElementById('standeeQrBox');
+      qrBox.innerHTML = '';
+
+      let targetUrl = '';
+      if (appConfig.localIp) {
+        // Operator configured specific local IP (e.g. 192.168.1.10:5500)
+        let ip = appConfig.localIp;
+        if (!ip.startsWith('http://') && !ip.startsWith('https://')) {
+          ip = 'http://' + ip;
+        }
+        targetUrl = ip + (ip.includes('?') ? '&' : '?') + 'mode=customer';
+      } else {
+        // Fallback current location URL with ?mode=customer
+        targetUrl = window.location.origin + window.location.pathname + '?mode=customer';
+      }
+
+      document.getElementById('kioskUrlDisplay').textContent = targetUrl;
+
+      new QRCode(qrBox, {
+        text: targetUrl,
+        width: 140,
+        height: 140,
+        colorDark: "#020617",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    }
+
+    function copyKioskUrlToClipboard() {
+      const url = document.getElementById('kioskUrlDisplay').textContent;
+      const el = document.createElement('textarea');
+      el.value = url;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      showToast('Link Copied to Clipboard!');
+    }
+
+    // -------------------------------------------------------------
+    // 4. VIEW TOGGLER (PC Operator vs Customer Phone Mode)
+    // -------------------------------------------------------------
+    function switchActiveView(view) {
+      const opWork = document.getElementById('operatorWorkspace');
+      const custWork = document.getElementById('customerWorkspace');
+      const opBtn = document.getElementById('viewBtnOperator');
+      const custBtn = document.getElementById('viewBtnCustomer');
+
+      if (view === 'operator') {
+        opWork.classList.remove('hidden');
+        custWork.classList.add('hidden');
+        opBtn.className = "px-3 py-1 rounded-lg text-xs font-semibold bg-red-600 text-white shadow transition";
+        custBtn.className = "px-3 py-1 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition";
+        renderQueueUI();
+      } else {
+        opWork.classList.add('hidden');
+        custWork.classList.remove('hidden');
+        custBtn.className = "px-3 py-1 rounded-lg text-xs font-semibold bg-red-600 text-white shadow transition";
+        opBtn.className = "px-3 py-1 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition";
+        calcCustomerBill();
+      }
+    }
+
+    // -------------------------------------------------------------
+    // 5. OPERATOR DIRECT FILE DROP (WhatsApp / USB / Folder)
+    // -------------------------------------------------------------
+    async function handleOperatorDirectUpload(e) {
+      const files = e.target.files;
+      if (!files || files.length === 0) return;
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        await processAndAddJob(file, 'Operator Direct (PC)', '—', 'bw', 1, 'single');
+      }
+      e.target.value = ''; // reset
+    }
+
+    // -------------------------------------------------------------
+    // 6. CUSTOMER SCAN & UPLOAD PIPELINE
+    // -------------------------------------------------------------
+    async function handleCustomerFileSelect(e) {
+      if (e.target.files && e.target.files[0]) {
+        const file = e.target.files[0];
+        customerSelectedBlob.file = file;
+        customerSelectedBlob.name = file.name;
+        customerSelectedBlob.sizeText = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
+
+        document.getElementById('custFileName').textContent = file.name;
+
+        // Parse page count via PDF.js if PDF
+        if (file.type === 'application/pdf') {
+          const arrayBuffer = await file.arrayBuffer();
+          try {
+            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+            customerSelectedBlob.pages = pdf.numPages;
+          } catch (err) {
+            console.warn('PDF page count failed:', err);
+            customerSelectedBlob.pages = 1;
+          }
+        } else {
+          customerSelectedBlob.pages = 1; // image
+        }
+
+        // Convert to Base64
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          customerSelectedBlob.base64Data = evt.target.result;
+          document.getElementById('custFileMeta').textContent = `${customerSelectedBlob.sizeText} • `;
+          document.getElementById('custPageNumSpan').textContent = `${customerSelectedBlob.pages} Page${customerSelectedBlob.pages > 1 ? 's' : ''}`;
+          document.getElementById('custUploadPrompt').classList.add('hidden');
+          document.getElementById('custSelectedBox').classList.remove('hidden');
+          calcCustomerBill();
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function resetCustomerFile(e) {
+      if (e) e.stopPropagation();
+      customerSelectedBlob = { file: null, name: '', sizeText: '', pages: 1, base64Data: null };
+      document.getElementById('custFileInput').value = '';
+      document.getElementById('custUploadPrompt').classList.remove('hidden');
+      document.getElementById('custSelectedBox').classList.add('hidden');
+      calcCustomerBill();
+    }
+
+    function adjustCustomerCopies(delta) {
+      const input = document.getElementById('custCopies');
+      let val = (parseInt(input.value) || 1) + delta;
+      if (val < 1) val = 1;
+      if (val > 99) val = 99;
+      input.value = val;
+      calcCustomerBill();
+    }
+
+    function calcCustomerBill() {
+      const colorVal = document.querySelector('input[name="custColorChoice"]:checked').value;
+      const copies = parseInt(document.getElementById('custCopies').value) || 1;
+      const sides = document.getElementById('custSides').value;
+
+      // Card highlight
+      const bwCard = document.getElementById('custOptBw');
+      const colCard = document.getElementById('custOptColor');
+      if (colorVal === 'bw') {
+        bwCard.className = "p-3 rounded-xl border-2 border-red-600 bg-red-950/30 cursor-pointer flex items-center gap-2.5 transition";
+        colCard.className = "p-3 rounded-xl border-2 border-slate-800 bg-slate-950 cursor-pointer flex items-center gap-2.5 transition";
+      } else {
+        colCard.className = "p-3 rounded-xl border-2 border-red-600 bg-red-950/30 cursor-pointer flex items-center gap-2.5 transition";
+        bwCard.className = "p-3 rounded-xl border-2 border-slate-800 bg-slate-950 cursor-pointer flex items-center gap-2.5 transition";
+      }
+
+      const rate = colorVal === 'color' ? appConfig.rateColor : appConfig.rateBw;
+      const pages = customerSelectedBlob.pages || 1;
+      let total = pages * copies * rate;
+
+      if (sides === 'duplex' && pages > 1) {
+        // Small duplex incentive simulation
+        total = Math.max(2, total * 0.95);
+      }
+
+      document.getElementById('custCalcTotal').textContent = `₹${total.toFixed(2)}`;
+      document.getElementById('custCalcFormula').textContent = 
+        `${pages} Page(s) × ${copies} Copy • ${colorVal.toUpperCase()} • ${sides === 'duplex' ? 'Both Sides' : 'Single'}`;
+    }
+
+    async function submitCustomerJobToKiosk() {
+      if (!customerSelectedBlob.file || !customerSelectedBlob.base64Data) {
+        showToast('कृपया पहले कोई PDF या फोटो चुनें!', true);
+        return;
+      }
+
+      const colorVal = document.querySelector('input[name="custColorChoice"]:checked').value;
+      const copies = parseInt(document.getElementById('custCopies').value) || 1;
+      const sides = document.getElementById('custSides').value;
+      const custName = document.getElementById('custInputName').value.trim() || 'Walk-in Customer';
+      const custPhone = document.getElementById('custInputPhone').value.trim() || '—';
+
+      const newJob = await processAndAddJob(
+        customerSelectedBlob.file,
+        custName,
+        custPhone,
+        colorVal,
+        copies,
+        sides,
+        customerSelectedBlob.base64Data,
+        customerSelectedBlob.pages
+      );
+
+      // Display Token popup to customer
+      document.getElementById('generatedTokenDisplay').textContent = `#${newJob.token}`;
+      document.getElementById('custTokenModal').classList.remove('hidden');
+
+      // Reset Form
+      resetCustomerFile();
+      document.getElementById('custInputName').value = '';
+      document.getElementById('custInputPhone').value = '';
+      document.getElementById('custCopies').value = '1';
+
+      showToast(`Token #${newJob.token} Created!`);
+    }
+
+    // -------------------------------------------------------------
+    // 7. CORE JOB CREATOR & TOKEN DISPATCHER
+    // -------------------------------------------------------------
+    async function processAndAddJob(file, custName, custPhone, colorMode, copies, sides, preCalculatedDataUrl = null, prePages = null) {
+      let dataUrl = preCalculatedDataUrl;
+      if (!dataUrl) {
+        dataUrl = await new Promise((res) => {
+          const r = new FileReader();
+          r.onload = (e) => res(e.target.result);
+          r.readAsDataURL(file);
+        });
+      }
+
+      let pageCount = prePages;
+      if (!pageCount) {
+        if (file.type === 'application/pdf') {
+          try {
+            const ab = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({ data: ab }).promise;
+            pageCount = pdf.numPages;
+          } catch (e) {
+            pageCount = 1;
+          }
+        } else {
+          pageCount = 1;
+        }
+      }
+
+      // Generate 4-Digit Easy Token for Cyber Cafe (e.g. #3812)
+      const token = Math.floor(1000 + Math.random() * 9000);
+      const rate = colorMode === 'color' ? appConfig.rateColor : appConfig.rateBw;
+      const totalCost = (pageCount * copies * rate).toFixed(2);
+
+      const job = {
+        id: 'JOB-' + Date.now() + '-' + token,
+        token: token,
+        fileName: file.name,
+        fileType: file.type,
+        fileSizeText: (file.size / (1024 * 1024)).toFixed(2) + ' MB',
+        customerName: custName,
+        customerPhone: custPhone,
+        colorMode: colorMode,
+        copies: copies,
+        sides: sides,
+        pages: pageCount,
+        totalBill: totalCost,
+        status: 'pending', // 'pending' | 'printed'
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        base64Data: dataUrl
+      };
+
+      // Add to array & IndexedDB
+      activeJobs.unshift(job);
+      saveJobToDB(job);
+
+      // Broadcast to other tabs (Shop PC Operator)
+      if (syncBroadcast) {
+        try {
+          syncBroadcast.postMessage({ type: 'NEW_PRINT_JOB', job: job });
+        } catch (e) {
+          console.warn('Sync broadcast fail:', e);
+        }
+      }
+
+      playBeepSound();
+      renderQueueUI();
+      updateMetricCounters();
+      return job;
+    }
+
+    // -------------------------------------------------------------
+    // 8. OPERATOR PRINT QUEUE RENDERER & ACTIONS
+    // -------------------------------------------------------------
+    function renderQueueUI(jobsToRender = null) {
+      const container = document.getElementById('queueCardContainer');
+      const list = jobsToRender || activeJobs;
+      const badge = document.getElementById('queueBadgeCount');
+
+      const pendingJobs = activeJobs.filter(j => j.status === 'pending');
+      badge.textContent = `${pendingJobs.length} waiting`;
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="h-64 flex flex-col items-center justify-center text-slate-500 border border-slate-800 rounded-2xl bg-slate-950/40">
+            <svg class="w-12 h-12 text-slate-700 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <p class="text-sm font-semibold text-slate-400">प्रिंट कतार खाली है (Queue Empty)</p>
+            <p class="text-xs text-slate-600 mt-1">Customer can scan Standee QR or you can drop files above</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = list.map(job => {
+        const isDone = job.status === 'printed';
+        const isColor = job.colorMode === 'color';
+
+        return `
+          <div class="p-3.5 bg-slate-950 rounded-xl border ${isDone ? 'border-slate-800/80 opacity-60' : 'border-slate-800 hover:border-slate-700'} flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition">
+            
+            <!-- Left Info -->
+            <div class="flex items-start gap-3">
+              <!-- Token Badge -->
+              <div class="flex flex-col items-center justify-center bg-slate-900 border ${isDone ? 'border-slate-800 text-slate-500' : 'border-red-600 text-red-400'} px-2.5 py-1.5 rounded-xl font-mono">
+                <span class="text-[9px] uppercase tracking-wider text-slate-400">Token</span>
+                <span class="text-base font-extrabold">#${job.token}</span>
+              </div>
+
+              <div>
+                <div class="flex items-center gap-2">
+                  <h4 class="text-xs font-bold text-white truncate max-w-[200px] sm:max-w-[320px]">${job.fileName}</h4>
+                  <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${isColor ? 'bg-pink-950 text-pink-300 border border-pink-800' : 'bg-slate-800 text-slate-300'}">
+                    ${isColor ? 'COLOR' : 'B&W'}
+                  </span>
+                  <span class="text-[10px] px-1.5 py-0.5 rounded ${isDone ? 'bg-emerald-950 text-emerald-400' : 'bg-amber-950 text-amber-400'}">
+                    ${isDone ? 'Printed' : 'Waiting'}
+                  </span>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-400 mt-1">
+                  <span class="text-slate-300">👤 <b>${job.customerName}</b></span>
+                  ${job.customerPhone !== '—' ? `<span>📞 ${job.customerPhone}</span>` : ''}
+                  <span class="font-mono text-blue-400">${job.pages}p × ${job.copies}c (${job.sides === 'duplex' ? 'Both' : 'Single'})</span>
+                  <span class="text-slate-500">⏱ ${job.time}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Actions & Total -->
+            <div class="flex items-center justify-between sm:justify-end gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-900">
+              <div class="text-right">
+                <span class="text-sm font-bold font-mono text-emerald-400">₹${job.totalBill}</span>
+                <span class="block text-[9px] text-slate-500">${job.fileSizeText}</span>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="flex items-center gap-1.5">
+                <!-- Preview Button -->
+                <button onclick="openInspectorModal('${job.id}')" title="Full Page Preview & Grayscale Check" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-semibold border border-slate-700 transition flex items-center gap-1">
+                  👁️ <span class="hidden md:inline">Inspect</span>
+                </button>
+
+                <!-- Direct Print to Canon Button -->
+                <button onclick="directPrintCanonJob('${job.id}')" class="px-3.5 py-1.5 ${isDone ? 'bg-slate-800 hover:bg-slate-700 text-slate-300' : 'bg-red-600 hover:bg-red-500 text-white shadow-md shadow-red-600/30'} rounded-lg text-xs font-bold transition flex items-center gap-1">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                  <span>${isDone ? 'Re-Print' : 'Print Now'}</span>
+                </button>
+
+                <!-- Delete -->
+                <button onclick="deleteJobOrder('${job.id}')" title="Remove" class="p-1.5 text-slate-500 hover:text-red-400 rounded-lg transition">
+                  ✕
+                </button>
+              </div>
+
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterQueueList() {
+      const q = document.getElementById('tokenSearchInput').value.trim().toLowerCase();
+      if (!q) {
+        renderQueueUI();
+        return;
+      }
+      const filtered = activeJobs.filter(j => 
+        j.token.toString().includes(q) || 
+        j.customerName.toLowerCase().includes(q) || 
+        j.fileName.toLowerCase().includes(q)
+      );
+      renderQueueUI(filtered);
+    }
+
+    function clearCompletedJobs() {
+      const completed = activeJobs.filter(j => j.status === 'printed');
+      completed.forEach(j => removeJobFromDB(j.id));
+      activeJobs = activeJobs.filter(j => j.status !== 'printed');
+      renderQueueUI();
+      showToast('Completed orders cleared.');
+    }
+
+    function deleteJobOrder(id) {
+      removeJobFromDB(id);
+      activeJobs = activeJobs.filter(j => j.id !== id);
+      renderQueueUI();
+      updateMetricCounters();
+    }
+
+    // -------------------------------------------------------------
+    // 9. HIGH-PRECISION CANON PIXMA DIRECT PRINT ENGINE
+    // -------------------------------------------------------------
+    async function directPrintCanonJob(jobId, overrideFilter = 'all', forceGrayscale = false) {
+      const job = activeJobs.find(j => j.id === jobId);
+      if (!job) return;
+
+      const printIsolation = document.getElementById('printIsolationArea');
+      printIsolation.innerHTML = '';
+      printIsolation.classList.remove('hidden');
+
+      // Update metrics & status
+      if (job.status !== 'printed') {
+        job.status = 'printed';
+        appConfig.printedPagesToday += (job.pages * job.copies);
+        appConfig.revenueToday += parseFloat(job.totalBill);
+        saveJobToDB(job);
+        renderQueueUI();
+        updateMetricCounters();
+      }
+
+      // Check if file is PDF vs Image
+      if (job.base64Data.startsWith('data:application/pdf')) {
+        try {
+          // Rasterize PDF pages using PDF.js for 100% accurate printer margins on Windows PC
+          const base64Clean = job.base64Data.split(',')[1];
+          const rawBytes = atob(base64Clean);
+          const uint8 = new Uint8Array(rawBytes.length);
+          for (let i = 0; i < rawBytes.length; i++) {
+            uint8[i] = rawBytes.charCodeAt(i);
+          }
+
+          const pdf = await pdfjsLib.getDocument({ data: uint8 }).promise;
+          const totalPages = pdf.numPages;
+
+          // Determine which pages to include
+          const pagesToPrint = [];
+          for (let p = 1; p <= totalPages; p++) {
+            if (overrideFilter === 'odd' && p % 2 === 0) continue;
+            if (overrideFilter === 'even' && p % 2 !== 0) continue;
+            pagesToPrint.push(p);
+          }
+
+          for (const pageNum of pagesToPrint) {
+            const page = await pdf.getPage(pageNum);
+            // High DPI Scale (2.0 = 144 DPI, crisp text on Canon inkjets)
+            const viewport = page.getViewport({ scale: 2.0 });
+
+            const canvas = document.createElement('canvas');
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            const ctx = canvas.getContext('2d');
+
+            await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+
+            const pageDiv = document.createElement('div');
+            pageDiv.className = 'canon-print-page';
+            
+            // If job is B&W or operator chose forceGrayscale, apply strict black filter to save Canon CMY inks
+            if (job.colorMode === 'bw' || forceGrayscale) {
+              canvas.className = 'force-grayscale';
+            }
+
+            pageDiv.appendChild(canvas);
+            printIsolation.appendChild(pageDiv);
+          }
+
+          // Trigger standard print dialog
+          setTimeout(() => {
+            window.print();
+            printIsolation.classList.add('hidden');
+          }, 300);
+
+        } catch (err) {
+          console.error('PDF rendering failed, fallback to iframe print:', err);
+          fallbackIframePrint(job.base64Data);
+        }
+      } else {
+        // Image printing (Aadhaar / Photo / Document JPG)
+        const pageDiv = document.createElement('div');
+        pageDiv.className = 'canon-print-page';
+        const img = document.createElement('img');
+        img.src = job.base64Data;
+        if (job.colorMode === 'bw' || forceGrayscale) {
+          img.className = 'force-grayscale';
+        }
+        pageDiv.appendChild(img);
+        printIsolation.appendChild(pageDiv);
+
+        setTimeout(() => {
+          window.print();
+          printIsolation.classList.add('hidden');
+        }, 300);
+      }
+    }
+
+    function fallbackIframePrint(dataUrl) {
+      const iframe = document.getElementById('silentPrintIframe');
+      iframe.src = dataUrl;
+      iframe.onload = () => {
+        try {
+          iframe.contentWindow.focus();
+          iframe.contentWindow.print();
+        } catch (e) {
+          window.print();
+        }
+      };
+    }
+
+    // -------------------------------------------------------------
+    // 10. INSPECT MODAL (Preview, Grayscale & Duplex Splitter)
+    // -------------------------------------------------------------
+    async function openInspectorModal(jobId) {
+      const job = activeJobs.find(j => j.id === jobId);
+      if (!job) return;
+
+      currentInspectingJob = job;
+      inspectorGrayscaleActive = (job.colorMode === 'bw');
+
+      document.getElementById('inspectTokenBadge').textContent = `#${job.token}`;
+      document.getElementById('inspectFileName').textContent = job.fileName;
+      document.getElementById('inspectDetails').textContent = 
+        `${job.pages} Pages • ${job.colorMode.toUpperCase()} • ${job.copies} Copy • ₹${job.totalBill}`;
+
+      const grayBtn = document.getElementById('grayscaleToggleBtn');
+      grayBtn.textContent = inspectorGrayscaleActive ? 'Grayscale: FORCED ON' : 'Grayscale: OFF';
+      grayBtn.className = inspectorGrayscaleActive 
+        ? 'px-2.5 py-1 text-xs font-semibold rounded-lg bg-emerald-700 text-white transition'
+        : 'px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-800 text-slate-300 border border-slate-700 transition';
+
+      document.getElementById('inspectorModal').classList.remove('hidden');
+      await renderInspectorPreviews();
+    }
+
+    async function renderInspectorPreviews() {
+      const canvasArea = document.getElementById('inspectorCanvasArea');
+      canvasArea.innerHTML = '<div class="text-xs text-slate-400">Rendering Canon A4 preview...</div>';
+
+      if (!currentInspectingJob) return;
+
+      const filter = document.getElementById('inspectPageFilter').value;
+      renderedInspectorPages = [];
+
+      if (currentInspectingJob.base64Data.startsWith('data:application/pdf')) {
+        try {
+          const base64Clean = currentInspectingJob.base64Data.split(',')[1];
+          const rawBytes = atob(base64Clean);
+          const uint8 = new Uint8Array(rawBytes.length);
+          for (let i = 0; i < rawBytes.length; i++) uint8[i] = rawBytes.charCodeAt(i);
+
+          const pdf = await pdfjsLib.getDocument({ data: uint8 }).promise;
+          canvasArea.innerHTML = '';
+
+          for (let p = 1; p <= pdf.numPages; p++) {
+            if (filter === 'odd' && p % 2 === 0) continue;
+            if (filter === 'even' && p % 2 !== 0) continue;
+
+            const page = await pdf.getPage(p);
+            const viewport = page.getViewport({ scale: 1.0 });
+
+            const card = document.createElement('div');
+            card.className = 'bg-white p-2 rounded-xl shadow-lg border border-slate-700 text-slate-900 flex flex-col items-center max-w-lg w-full';
+
+            const canvas = document.createElement('canvas');
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            canvas.style.maxWidth = '100%';
+            canvas.style.height = 'auto';
+
+            if (inspectorGrayscaleActive) {
+              canvas.style.filter = 'grayscale(100%) contrast(110%)';
+            }
+
+            const ctx = canvas.getContext('2d');
+            await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+
+            const label = document.createElement('div');
+            label.className = 'text-[11px] font-mono text-slate-500 mt-1';
+            label.textContent = `Page ${p} of ${pdf.numPages} (Canon A4 Preview)`;
+
+            card.appendChild(canvas);
+            card.appendChild(label);
+            canvasArea.appendChild(card);
+          }
+        } catch (e) {
+          canvasArea.innerHTML = `<div class="text-xs text-red-400">Preview rendering error: ${e.message}</div>`;
+        }
+      } else {
+        // Image
+        canvasArea.innerHTML = `
+          <div class="bg-white p-3 rounded-xl shadow-lg max-w-md w-full text-center">
+            <img src="${currentInspectingJob.base64Data}" style="${inspectorGrayscaleActive ? 'filter: grayscale(100%);' : ''} max-width:100%; border-radius: 8px;">
+            <p class="text-[11px] text-slate-600 font-mono mt-2">Single Image Document</p>
+          </div>
+        `;
+      }
+    }
+
+    function toggleInspectorGrayscale() {
+      inspectorGrayscaleActive = !inspectorGrayscaleActive;
+      const grayBtn = document.getElementById('grayscaleToggleBtn');
+      grayBtn.textContent = inspectorGrayscaleActive ? 'Grayscale: FORCED ON' : 'Grayscale: OFF';
+      grayBtn.className = inspectorGrayscaleActive 
+        ? 'px-2.5 py-1 text-xs font-semibold rounded-lg bg-emerald-700 text-white transition'
+        : 'px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-800 text-slate-300 border border-slate-700 transition';
+      renderInspectorPreviews();
+    }
+
+    function applyPageFilterToPreview() {
+      renderInspectorPreviews();
+    }
+
+    function executeInspectorDirectPrint() {
+      if (!currentInspectingJob) return;
+      const filter = document.getElementById('inspectPageFilter').value;
+      directPrintCanonJob(currentInspectingJob.id, filter, inspectorGrayscaleActive);
+      closeInspectorModal();
+    }
+
+    function closeInspectorModal() {
+      document.getElementById('inspectorModal').classList.add('hidden');
+      currentInspectingJob = null;
+    }
+
+    // -------------------------------------------------------------
+    // 11. CANON PIXMA SPECIALIZED HELPERS & PRESETS
+    // -------------------------------------------------------------
+    function applyPreset(presetType) {
+      if (presetType === 'plain_bw') {
+        showToast('Preset Loaded: Plain Paper A4 • B&W Grayscale (Saves Color Ink)');
+      } else if (presetType === 'plain_color') {
+        showToast('Preset Loaded: Plain Paper A4 • High Quality Color');
+      } else if (presetType === 'id_card') {
+        showToast('Preset Loaded: Aadhaar / Voter ID Center Fit (Standard 8.5 x 5.5 cm)');
+      } else if (presetType === 'photo_glossy') {
+        showToast('Preset Loaded: Canon Glossy Photo Paper (Set quality to HIGH in driver)');
+      }
+    }
+
+    // 1-Click Canon CMYK Nozzle Check Generator
+    function printCanonTestPage() {
+      const printIsolation = document.getElementById('printIsolationArea');
+      printIsolation.innerHTML = '';
+      printIsolation.classList.remove('hidden');
+
+      const page = document.createElement('div');
+      page.className = 'canon-print-page';
+      page.style.flexDirection = 'column';
+      page.style.justifyContent = 'space-between';
+      page.style.padding = '20mm';
+      page.style.color = '#000';
+      page.style.fontFamily = 'monospace';
+
+      page.innerHTML = `
+        <div style="text-align:center; border-bottom: 2px solid #000; padding-bottom: 8px;">
+          <h2 style="margin:0; font-size:18pt; font-weight:bold;">CANON PIXMA G2012 / G3010 NOZZLE CHECK</h2>
+          <p style="margin:4px 0 0; font-size:10pt;">Ink Tank Head Alignment & CMYK Firing Test</p>
+        </div>
+
+        <div style="margin: 30px 0; display:flex; flex-direction:column; gap: 15px;">
+          <!-- Black GI-790 Grid -->
+          <div>
+            <b style="font-size:10pt;">|BK| Pigment Black (GI-790 PGBK) Pattern:</b>
+            <div style="margin-top:6px; display:grid; grid-template-columns: repeat(20, 1fr); gap: 2px; height: 26px;">
+              ${Array(40).fill('<div style="background:#000; border:0.5px solid #fff;"></div>').join('')}
+            </div>
+          </div>
+
+          <!-- Cyan -->
+          <div>
+            <b style="font-size:10pt;">|C| Cyan (GI-790 C):</b>
+            <div style="margin-top:4px; height: 18px; background: #00bcd4; border: 1px solid #0097a7;"></div>
+          </div>
+
+          <!-- Magenta -->
+          <div>
+            <b style="font-size:10pt;">|M| Magenta (GI-790 M):</b>
+            <div style="margin-top:4px; height: 18px; background: #e91e63; border: 1px solid #c2185b;"></div>
+          </div>
+
+          <!-- Yellow -->
+          <div>
+            <b style="font-size:10pt;">|Y| Yellow (GI-790 Y):</b>
+            <div style="margin-top:4px; height: 18px; background: #ffeb3b; border: 1px solid #fbc02d;"></div>
+          </div>
+        </div>
+
+        <div style="border-top: 1px dashed #666; padding-top: 10px; font-size: 9pt; display:flex; justify-content:space-between;">
+          <span>Date: ${new Date().toLocaleString()}</span>
+          <span>Station: PC Direct Operator Desk</span>
+          <span>Result: [ ] Pass  [ ] Need Deep Cleaning</span>
+        </div>
+      `;
+
+      printIsolation.appendChild(page);
+      setTimeout(() => {
+        window.print();
+        printIsolation.classList.add('hidden');
+      }, 300);
+    }
+
+    // 1-Click Customer Standee Printout (Hang on shop counter)
+    function printCustomerStandeeSheet() {
+      const printIsolation = document.getElementById('printIsolationArea');
+      printIsolation.innerHTML = '';
+      printIsolation.classList.remove('hidden');
+
+      const qrCanvas = document.querySelector('#standeeQrBox canvas');
+      const qrDataUrl = qrCanvas ? qrCanvas.toDataURL() : '';
+
+      const page = document.createElement('div');
+      page.className = 'canon-print-page';
+      page.style.flexDirection = 'column';
+      page.style.justifyContent = 'center';
+      page.style.alignItems = 'center';
+      page.style.textAlign = 'center';
+      page.style.padding = '15mm';
+      page.style.color = '#000';
+      page.style.fontFamily = 'sans-serif';
+
+      page.innerHTML = `
+        <div style="border: 4px solid #cc0000; padding: 25px; border-radius: 20px; width: 100%; max-width: 480px;">
+          <h1 style="color:#cc0000; margin:0; font-size:26pt; font-weight:800;">${appConfig.shopName}</h1>
+          <p style="font-size:14pt; margin:6px 0 16px; font-weight:600; color:#333;">SCAN & PRINT DIRECTLY (सीधे प्रिंट करें)</p>
+          
+          <div style="display:inline-block; padding:15px; background:#fff; border: 3px solid #000; border-radius:16px;">
+            <img src="${qrDataUrl}" style="width:220px; height:220px; display:block;">
+          </div>
+
+          <div style="margin-top: 18px; text-align:left; font-size:12pt; line-height:1.6; background:#f3f4f6; padding:12px 18px; border-radius:12px;">
+            <b>📱 प्रिंट निकालने का तरीका:</b><br>
+            1. अपने फोन कैमरे से यह QR स्कैन करें।<br>
+            2. अपनी PDF या फोटो अपलोड करें।<br>
+            3. मिलने वाला <b>टोकन नंबर</b> काउंटर पर बताएं।
+          </div>
+
+          <p style="margin-top:14px; font-size:10pt; color:#666;">Powered by Canon PIXMA G2012 / G3010 High-Speed Ink Tank</p>
+        </div>
+      `;
+
+      printIsolation.appendChild(page);
+      setTimeout(() => {
+        window.print();
+        printIsolation.classList.add('hidden');
+      }, 300);
+    }
+
+    // -------------------------------------------------------------
+    // 12. METRICS & AUDIO ALERTS
+    // -------------------------------------------------------------
+    function updateMetricCounters() {
+      const pendingJobs = activeJobs.filter(j => j.status === 'pending');
+      document.getElementById('statQueue').textContent = pendingJobs.length;
+      document.getElementById('statPages').textContent = appConfig.printedPagesToday;
+      document.getElementById('statEarnings').textContent = `₹${appConfig.revenueToday.toFixed(0)}`;
+    }
+
+    function playBeepSound() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(659.25, ctx.currentTime); // E5
+        osc.frequency.setValueAtTime(880, ctx.currentTime + 0.12); // A5
+
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.45);
+      } catch (e) {
+        console.warn('Audio not available', e);
+      }
+    }
+
+    function showToast(msg, isError = false) {
+      const toast = document.getElementById('toastAlert');
+      const text = document.getElementById('toastMessage');
+      const icon = document.getElementById('toastIcon');
+
+      text.textContent = msg;
+      icon.textContent = isError ? '⚠️' : '🖨️';
+
+      toast.className = isError
+        ? "fixed top-16 right-6 z-50 transform translate-y-0 opacity-100 transition-all duration-300 pointer-events-auto flex items-center gap-3 bg-amber-600 text-white px-5 py-3 rounded-xl shadow-2xl border border-amber-500 font-medium text-sm"
+        : "fixed top-16 right-6 z-50 transform translate-y-0 opacity-100 transition-all duration-300 pointer-events-auto flex items-center gap-3 bg-red-600 text-white px-5 py-3 rounded-xl shadow-2xl border border-red-500 font-medium text-sm";
+
+      setTimeout(() => {
+        toast.className = "fixed top-16 right-6 z-50 transform translate-y-[-120%] opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-3 bg-red-600 text-white px-5 py-3 rounded-xl shadow-2xl border border-red-500 font-medium text-sm";
+      }, 3500);
+    }
+  </script>
+</body>
+</html>
